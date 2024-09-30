@@ -1,0 +1,136 @@
+P1
+	entity, attribute, table definition 
+Entities:
+	Theatre – Movie – Show – Booking – User – Seat
+Attributes and Table definition
+1.	Theatre:
+•	TheatreId (pk) 
+•	TheatreName
+•	SeatCount
+•	Location (area city like bellandur)
+•	Address (should be split as city, area, pincode)
+Create table Theatre (
+    TheatreID INT PRIMARY KEY,
+    TheatreName VARCHAR(50),
+    SeatCount INT,
+    Location VARCHAR(50),
+    Address VARCHAR(255)
+);
+2.	Movie:
+•	MovieID (pk)
+•	MovieName
+•	Language
+•	Genre
+•	Duration (min)
+•	ReleaseDate
+
+CREATE TABLE Movie (
+    MovieID INT PRIMARY KEY,
+    MovieName VARCHAR(20),
+    Language VARCHAR(20),
+   Genre VARCHAR(30),
+    Duration INT,
+    ReleaseDate DATE );
+3.	Show:
+o	ShowID (pk)
+o	TheatreID (fk)
+o	MovieID (fk)
+o	ShowDate 
+o	ShowTime 
+CREATE TABLE Show (
+    ShowID INT PRIMARY KEY,
+    TheatreID INT,
+    MovieID INT,
+    ShowDate DATE,
+    ShowTime TIME,
+    FOREIGN KEY (TheatreID) REFERENCES Theatre(TheatreID),
+    FOREIGN KEY (MovieID) REFERENCES Movie(MovieID)
+);
+4.	Booking:
+o	BookingID (pk)
+o	UserID (fk)
+o	ShowID (fk)
+o	BookingDate
+o	BookingAmount
+CREATE TABLE Booking (
+    BookingID INT PRIMARY KEY,
+    UserID INT,
+    ShowID INT,
+    BookingDate DATE,
+    BookingAmount DECIMAL(10,2),
+    FOREIGN KEY (UserID) REFERENCES User(UserID),
+    FOREIGN KEY (ShowID) REFERENCES Show(ShowID)
+);
+
+
+5.	User:
+o	UserID (pk) 
+o	UserName
+o	Email
+o	Password
+o	PhoneNumber
+
+CREATE TABLE User (
+    UserID INT PRIMARY KEY,
+    UserName VARCHAR(10),
+    Email VARCHAR(20),
+    Password VARCHAR(30)
+    PhoneNumber VARCHAR(15)
+);
+
+6.	Seat:
+o	SeatID (pk) 
+o	ShowID (fk)
+o	SeatNumber
+o	IsAvailable 
+CREATE TABLE Seat (
+    SeatID INT PRIMARY KEY,
+    ShowID INT,
+    SeatNumber VARCHAR(10),
+    IsAvailable BOOLEAN,
+    FOREIGN KEY (ShowID) REFERENCES Show(ShowID)
+);
+
+
+
+Sample Entries:
+Theatre
+INSERT INTO Theatre (TheatreID, TheatreName, Location, Address) VALUES 
+(1, 'PVR Cinemas', 'Mumbai', '123 Street, Mumbai'),
+(2, 'INOX', 'Delhi', '456 Avenue, Delhi');
+
+Movie
+INSERT INTO Movie (MovieID, MovieName, Genre, Duration, ReleaseDate) VALUES 
+(1, 'Inception', 'Sci-Fi', 148, '2010-07-16'),
+(2, 'Avatar', 'Fantasy', 162, '2009-12-18');
+
+Show
+INSERT INTO Show (ShowID, TheatreID, MovieID, ShowDate, ShowTime) VALUES 
+(1, 1, 1, '2024-10-01', '18:00:00'),
+(2, 1, 2, '2024-10-01', '21:00:00'),
+(3, 2, 1, '2024-10-02', '17:00:00');
+
+User
+INSERT INTO User (UserID, UserName, Email, PhoneNumber) VALUES 
+(1, 'John Doe', 'john@example.com', '1234567890'),
+(2, 'Jane Smith', 'jane@example.com', '0987654321');
+
+Booking
+INSERT INTO Booking (BookingID, UserID, ShowID, BookingDate, TotalAmount) VALUES 
+(1, 1, 1, '2024-09-30', 500.00),
+(2, 2, 2, '2024-09-30', 600.00);
+
+Seat
+INSERT INTO Seat (SeatID, ShowID, SeatNumber, IsAvailable) VALUES 
+(1, 1, 'A1', TRUE),
+(2, 1, 'A2', FALSE),
+(3, 2, 'B1', TRUE);
+P2: 
+1.	List all shows in a theatre on a given date
+Example:
+SELECT s.ShowID, m.MovieName, s.ShowTime
+FROM Show s
+JOIN Movie m ON s.MovieID = m.MovieID
+WHERE s.TheatreID = 1
+AND s.ShowDate = '2024-10-01';
+
